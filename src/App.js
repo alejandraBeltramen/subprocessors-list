@@ -1,9 +1,10 @@
-function App() {
+import React from "react";
+import SubprocessorsManagementPage from "./pages/subprocessors-management";
+
+const App = () => {
   return (
-    <div>
-      Hola
-    </div>
+    <SubprocessorsManagementPage />
   );
-}
+};
 
 export default App;
