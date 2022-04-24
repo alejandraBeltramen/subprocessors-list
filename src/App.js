@@ -9,6 +9,7 @@ const App = () => {
       <Routes exact>
         <Route path="/" element={<Home />} />
         <Route path="/subprocessors-management" element={<SubprocessorsManagementPage />} />
+        <Route path="*" element={<Home />}/>
       </Routes>
     </div>
   );
