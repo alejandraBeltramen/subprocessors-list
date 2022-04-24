@@ -13,6 +13,7 @@ import {
     editSubprocessor as editSubprocessorService,
 } from "../services/SubprocoessorService";
 import Subprocessor from "../models/subprocessor";
+import { ErrorSnackbar, SuccessSnackbar } from "../components/UI/Snackbar";
 
 // They could be localized to different languages in a single place
 const localizableStrings = {
@@ -29,21 +30,35 @@ const localizableStrings = {
     saveLabel: 'Save',
     addSubprocessorTitle: 'Add Subprocessor',
     editSubprocessorTitle: 'Edit Subprocessor',
+    successMessage: 'Changes saved successfully',
+    errorMessage: 'Something went wrong! Please, try again.'
 };
 
 const SubprocessorsManagementPage = () => {
-    const { pageTitle, fields, confirmRemovalText, addSubprocessorBtnLabel } = localizableStrings;
+    const {
+        pageTitle,
+        fields,
+        confirmRemovalText,
+        addSubprocessorBtnLabel,
+        successMessage,
+        errorMessage,
+    } = localizableStrings;
     const { nameLabel, purposeLabel, locationLabel } = fields;
-    
+
     const [ subprocessors, setSubproecessors ] = useState([]);
     const [ selectedSubprocessor, setSelectedSubprocessor ] = useState(null);
     const [ openRemoveModal, setOpenRemoveMoval ] = useState(false);
     const [ openAddEditSubprocessorModal, setOpenAddEditSubprocessorModal ] = useState(false);
+    const [ isSuccessSnackbarOpen, setIsSuccessSnackbarOpen ] = useState(false);
+    const [ isErrorSnackbarOpen, setIsErrorSnackbarOpen ] = useState(false);
 
     useEffect(() => {
-        // TODO simulate an async fn
-        const subprocessorsLS = getSubprocessorsService();
-        if(subprocessorsLS) setSubproecessors(subprocessorsLS);
+        try {
+            const subprocessorsLS = getSubprocessorsService();
+            if(subprocessorsLS) setSubproecessors(subprocessorsLS);
+        } catch(e) {
+            setIsErrorSnackbarOpen(true);
+        }
     }, []); // TODO define the dependencies....
 
     /* Modal open/close handlers */
@@ -67,24 +82,33 @@ const SubprocessorsManagementPage = () => {
 
     /* Add, Edit, Remove handlers */
     const removalConfirmationHandler = () => {
-        // TODO execute async fn to remove it from the local storage
-        const newSubprocessorsList = removeSubprocessorService(selectedSubprocessor);
-        setSubproecessors(newSubprocessorsList);
+        try {
+            const newSubprocessorsList = removeSubprocessorService(selectedSubprocessor);
+            setSubproecessors(newSubprocessorsList);
+            setIsSuccessSnackbarOpen(true);
+        } catch(e) {
+            setIsErrorSnackbarOpen(true);
+        }
         closeRemoveModalHandler();
     };
     const addEditSubmitHandler = (formValues) => {
         let newSubprocessorsList;
-        if(selectedSubprocessor) {
-            // perform Edit
-            const updatedSubprocessor = { id: selectedSubprocessor.id, ...formValues };
-            newSubprocessorsList = editSubprocessorService(updatedSubprocessor);
-        } else {
-            // perform Add
-            const { name, purpose, location } = formValues;
-            const newSubprocessor = new Subprocessor(name, purpose, location);
-            newSubprocessorsList = addSubprocessorService(newSubprocessor);
+        try {
+            if(selectedSubprocessor) {
+                // perform Edit
+                const updatedSubprocessor = { id: selectedSubprocessor.id, ...formValues };
+                newSubprocessorsList = editSubprocessorService(updatedSubprocessor);
+            } else {
+                // perform Add
+                const { name, purpose, location } = formValues;
+                const newSubprocessor = new Subprocessor(name, purpose, location);
+                newSubprocessorsList = addSubprocessorService(newSubprocessor);
+            }
+            setSubproecessors(newSubprocessorsList);
+            setIsSuccessSnackbarOpen(true);
+        } catch(e) {
+            setIsErrorSnackbarOpen(true);
         }
-        setSubproecessors(newSubprocessorsList);
         closeAddEditModalHandler();
     };
 
@@ -119,6 +143,16 @@ const SubprocessorsManagementPage = () => {
                     onClose={closeAddEditModalHandler}
                 />
             )}
+            <SuccessSnackbar
+                open={isSuccessSnackbarOpen}
+                handleClose={() => setIsSuccessSnackbarOpen(false)}
+                message={successMessage}
+            />
+            <ErrorSnackbar
+                open={isErrorSnackbarOpen}
+                handleClose={() => setIsErrorSnackbarOpen(false)}
+                message={errorMessage}
+            />
         </PageContainer>
     );
 };
