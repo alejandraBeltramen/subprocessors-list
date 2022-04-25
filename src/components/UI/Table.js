@@ -12,12 +12,10 @@ export const TableRow = styled(MUITableRow)(() => ({
 
 export const TableCell = styled(MUITableCell)(() => ({
     [`&.${tableCellClasses.head}`]: {
-        padding: pxToRem(16),
         fontWeight: 700,
         padding: pxToRem(8),
     },
     [`&.${tableCellClasses.body}`]: {
-        padding: pxToRem(16),
         padding: pxToRem(8),
         borderBottom: '1px solid rgb(247 245 245)',
     },

@@ -37,7 +37,6 @@ const Modal = ({ open, children, ...otherProps }) => {
 const modalTitleTextStyles = (theme) => ({
     marginBottom: pxToRem(10),
     fontWeight: 700,
-    marginBottom: pxToRem(10),
     [theme.breakpoints.down('sm')]: {
         fontSize: pxToRem(15),
         marginBottom: pxToRem(5),
