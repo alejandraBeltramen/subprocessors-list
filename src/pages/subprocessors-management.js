@@ -5,7 +5,6 @@ import Modal, { ModalTitleText, ModalActions } from '../components/UI/Modal';
 import ConfirmationModal from "../components/layout/ConfirmationModal";
 import ManageItemsTable from "../components/layout/ManageItemsTable";
 import { CardContent, Stack, Typography } from '@mui/material';
-import TextField from '@mui/material/TextField';
 import {
     getSubprocessors as getSubprocessorsService,
     removeSubprocessor as removeSubprocessorService,
@@ -14,6 +13,8 @@ import {
 } from "../services/SubprocoessorService";
 import Subprocessor from "../models/subprocessor";
 import { ErrorSnackbar, SuccessSnackbar } from "../components/UI/Snackbar";
+import { useForm, useWatch } from 'react-hook-form';
+import { FormContainer, TextFieldElement } from "react-hook-form-mui";
 
 // They could be localized to different languages in a single place
 const localizableStrings = {
@@ -25,13 +26,13 @@ const localizableStrings = {
     },
     addSubprocessorBtnLabel: 'Add Subprocessor',
     confirmRemovalText: 'Are you sure that you want to remove it?',
-    addEditValidationMsg: "Please, enter a valid",
     cancelLabel: 'Cancel',
     saveLabel: 'Save',
     addSubprocessorTitle: 'Add Subprocessor',
     editSubprocessorTitle: 'Edit Subprocessor',
     successMessage: 'Changes saved successfully',
-    errorMessage: 'Something went wrong! Please, try again.'
+    errorMessage: 'Something went wrong! Please, try again.',
+    fieldRequiredMsg: 'This field is required',
 };
 
 const SubprocessorsManagementPage = () => {
@@ -159,36 +160,26 @@ const SubprocessorsManagementPage = () => {
 
 const AddEditSubprocessorModal = ({ open, subprocessor, onSave, onClose }) => {
     const {
-        addEditValidationMsg,
         cancelLabel,
-        saveLabel,
         fields,
         addSubprocessorTitle,
         editSubprocessorTitle,
+        fieldRequiredMsg,
     } = localizableStrings;
     const { nameLabel, purposeLabel, locationLabel } = fields;
+    const formContext = useForm({
+        defaultValues: {
+            name: subprocessor?.name || '',
+            purpose: subprocessor?.purpose || '',
+            location: subprocessor?.location || '',
+        },
+        mode: 'all', // it will trigger validations onChange and onBlur
+    });
+    const { handleSubmit } = formContext;
 
-    const [ nameValue, setNameValue ] = useState(subprocessor?.name || '');
-    const [ purposeValue, setPurposeValue ] = useState(subprocessor?.purpose || '');
-    const [ locationValue, setLocationValue ] = useState(subprocessor?.location || '');
-    const [ isNameValid, setIsNameValid ] = useState(true);
-    const [ isPurposeValid, setIsPurposeValid ] = useState(true);
-    const [ isLocationValid, setIsLocationValid ] = useState(true);
-
-    const submitHandler = (ev) => {
-        ev.preventDefault();
-        onSave({ name: nameValue, purpose: purposeValue, location: locationValue });
-    };
-
-    const fieldChangeHandler = (ev, setFieldValueFn, setFieldValidityFn) => {
-        const value = ev.target.value;
-        setFieldValueFn(value);
-        setFieldValidityFn(!isEmpty(value));
-    };
-
-    const isFormValid = () => (
-        !isEmpty(nameValue) && !isEmpty(purposeValue) && !isEmpty(locationValue)
-    );
+    const submitHandler = handleSubmit((formData) => {
+        onSave(formData);
+    });
 
     return (
         <Modal
@@ -197,7 +188,10 @@ const AddEditSubprocessorModal = ({ open, subprocessor, onSave, onClose }) => {
             aria-labelledby="modal-title"
             aria-describedby="modal-description"
         >
-            <form onSubmit={submitHandler}>
+            <FormContainer
+                formContext={formContext}
+                handleSubmit={submitHandler}
+            >
                 <CardContent>
                     <ModalTitleText variant="h6" id="modal-title">
                         { subprocessor ?  editSubprocessorTitle : addSubprocessorTitle }
@@ -207,56 +201,48 @@ const AddEditSubprocessorModal = ({ open, subprocessor, onSave, onClose }) => {
                         justifyContent="center"
                         alignItems="left"
                         spacing={2}
-                        id="modal-description"
-                    >
-                        <TextField
-                            id="name"
-                            label={nameLabel}
-                            defaultValue={subprocessor?.name}
-                            error={!isNameValid}
-                            helperText={!isNameValid && `${addEditValidationMsg} ${nameLabel}` }
-                            variant="standard"
-                            required
-                            onChange={(ev) => fieldChangeHandler(ev, setNameValue, setIsNameValid)}
-                        />
-
-                        <TextField
-                            id="purpose"
-                            label={purposeLabel}
-                            defaultValue={subprocessor?.purpose}
-                            error={!isPurposeValid}
-                            helperText={!isPurposeValid && `${addEditValidationMsg} ${purposeLabel}` }
-                            variant="standard"
-                            required
-                            onChange={(ev) => fieldChangeHandler(ev, setPurposeValue, setIsPurposeValid)}
-                        />
-
-                        <TextField
-                            id="location"
-                            label={locationLabel}
-                            defaultValue={subprocessor?.location}
-                            error={!isLocationValid}
-                            helperText={!isLocationValid && `${addEditValidationMsg} ${locationLabel}` }
-                            variant="standard"
-                            required
-                            onChange={(ev) => fieldChangeHandler(ev, setLocationValue, setIsLocationValid)}
-                        />
-                    </Stack>
+                        >
+                            <TextFieldElement
+                                name="name"
+                                label={nameLabel}
+                                parseError={() => fieldRequiredMsg}
+                                required
+                            />
+                            <TextFieldElement
+                                name="purpose"
+                                label={purposeLabel}
+                                parseError={() => fieldRequiredMsg}
+                                required
+                            />
+                            <TextFieldElement
+                                name="location"
+                                label={locationLabel}
+                                parseError={() => fieldRequiredMsg}
+                                required
+                            />
+                        </Stack>
                 </CardContent>
                 <ModalActions>
                     <Button onClick={onClose} size="small">
                         { cancelLabel }
                     </Button>
-                    <Button variant="contained" type="submit" size="small" disabled={!isFormValid()}>
-                        { saveLabel }
-                    </Button>
+                    <SubmitButton />
                 </ModalActions>
-            </form>
+            </FormContainer>
         </Modal>
     );
 };
 
-// This function could potentially be moved to a utils file for form operations and validations
-const isEmpty = (value) => value.trim() === '';
+const SubmitButton = () => {
+    const { saveLabel } = localizableStrings;
+    const [ name, purpose, location ] = useWatch({ name: [ 'name', 'purpose', 'location'] });
+    console.log(`name: ${name} | purpose: ${purpose} | location: ${location}`)
+
+    return (
+        <Button variant="contained" type="submit" size="small" disabled={!(name && purpose && location)}>
+            { saveLabel }
+        </Button>
+    );
+};
 
 export default SubprocessorsManagementPage;
