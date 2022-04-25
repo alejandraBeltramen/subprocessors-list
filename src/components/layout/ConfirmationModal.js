@@ -19,10 +19,15 @@ const ConfirmationModal = ({
 }) => {
     const { titleLabel, cancelLabel, confirmLabel } = localizableStrings;
     return (
-        <Modal onClose={onClose} {...otherProps}>
+        <Modal
+            onClose={onClose}
+            aria-labelledby="modal-title"
+            aria-describedby="modal-description"
+            {...otherProps}
+        >
             <CardContent>
-                <ModalTitleText>{ title || titleLabel }</ModalTitleText>
-                <div>{ children }</div>
+                <ModalTitleText id="modal-title">{ title || titleLabel }</ModalTitleText>
+                <div id="modal-description">{ children }</div>
             </CardContent>
             <ModalActions>
                 <Button onClick={onClose} size="small">

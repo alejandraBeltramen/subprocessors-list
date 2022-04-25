@@ -191,10 +191,15 @@ const AddEditSubprocessorModal = ({ open, subprocessor, onSave, onClose }) => {
     );
 
     return (
-        <Modal open={open} onClose={onClose}>
+        <Modal
+            open={open}
+            onClose={onClose}
+            aria-labelledby="modal-title"
+            aria-describedby="modal-description"
+        >
             <form onSubmit={submitHandler}>
                 <CardContent>
-                    <ModalTitleText variant="h6">
+                    <ModalTitleText variant="h6" id="modal-title">
                         { subprocessor ?  editSubprocessorTitle : addSubprocessorTitle }
                     </ModalTitleText>
                     <Stack 
@@ -202,6 +207,7 @@ const AddEditSubprocessorModal = ({ open, subprocessor, onSave, onClose }) => {
                         justifyContent="center"
                         alignItems="left"
                         spacing={2}
+                        id="modal-description"
                     >
                         <TextField
                             id="name"

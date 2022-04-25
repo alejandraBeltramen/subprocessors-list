@@ -43,9 +43,11 @@ const modalTitleTextStyles = (theme) => ({
         marginBottom: pxToRem(5),
     }
 });
-export const ModalTitleText = ({ children }) => {
+export const ModalTitleText = ({ children, ...otherProps }) => {
     return (
-        <Typography variant="h6" sx={modalTitleTextStyles}>{ children }</Typography>
+        <Typography variant="h6" sx={modalTitleTextStyles} {...otherProps}>
+            { children }
+        </Typography>
     );
 }
 
