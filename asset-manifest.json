@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/subprocessors-list/static/css/main.e6c13ad2.css",
+    "main.js": "/subprocessors-list/static/js/main.2f9b6782.js",
+    "index.html": "/subprocessors-list/index.html",
+    "main.e6c13ad2.css.map": "/subprocessors-list/static/css/main.e6c13ad2.css.map",
+    "main.2f9b6782.js.map": "/subprocessors-list/static/js/main.2f9b6782.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.e6c13ad2.css",
+    "static/js/main.2f9b6782.js"
+  ]
+}
