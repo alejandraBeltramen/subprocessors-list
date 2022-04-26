@@ -16,13 +16,28 @@ const Home = () => {
                     In order to simulate a real aplication, the Subprocessors Management Table was placed
                     within a page accesed by url on the path
                     <Typography variant="caption"> /subprocessors-management.</Typography>
-                    You can manually input that path or click on the link below:
+                    To navigate to that page, click on the link below:
                 </Typography>
-                <Button size="small">
+                <Button size="large">
                     <Link to='/subprocessors-management'>
                         Go to Subprocessors Management page
                     </Link>
                 </Button>
+                <br />
+                <br />
+                <Typography variant="subtitle2" sx={{ paddingLeft: '10%', paddingRight: '10%'}}>
+                    Note: Please, don't hard refresh or navigate by changing the browser url manually. It will 
+                    not work. GitHub Pages doesn’t support routers that use the HTML5 pushState history 
+                    API under the hood. 
+                    <span>
+                        <a
+                            href="https://create-react-app.dev/docs/deployment/#notes-on-client-side-routing"
+                            target="_blank"
+                        >
+                            See create-react-app docs.
+                        </a>
+                    </span>
+                </Typography>
             </Card>
         </PageContainer>
     );
