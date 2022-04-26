@@ -1,70 +1,44 @@
-# Getting Started with Create React App
-
+# Code Challenge 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+### Demo
+The app is already deployed on GitHub Pages: https://alejandrabeltramen.github.io/subprocessors-list/
 
-In the project directory, you can run:
+### Some decisions I made while doing this challenge:
+- **Routing:** Since it is a SPA, I used `react-router` to allow navigating between different paths and avoid performing new http requests on navigation.
+- **Material UI:** Decided to use `material-UI` since it provide a huge set of UI components, allows to override its theme to something custom, helps on taking care of the responsiveness and it also follows accessibility rules under the hood.
+- **Reusable CRUD Management table:** The management table looks like something that could be reused for many other items (not only for sub-processors). For that reason, I have created a re-usable table for CRUD operations: it receives a list of items, the headers, the title and it creates a table with those items with actions on each row. Adding, removing and editing items will trigger handlers passed as props.
+- **Subprocessors Service:** The Subprocessors Management Page renders the management table and contains the implementation for adding, editing and modifying sub-processors. To do that, It uses a `subprocessorsService` that will actually perform the action on the storage. Currently, the service operates with the local storage, but if that changes (it should actually operate with a backend), the UI will not require any concerning update, only the service implementation will change.
+- **Localization:** Copy’s and all strings are isolated in an object. It means that if the application needs to be localized (translated to different languages), just the object would need to change. It could be a json file instead.
+- **Form validations:** Decided to use `react-hook-form` lib (recommended by react) to help on form validations. There is also another lib `react-hook-form-mui` which already apply validations to MUI elements. Adding new validations to the inputs will be smoother.
+- **Accessibility and keyboard control:** Made the table and the form accessible and usable via keyboard control. Besides that, if we want a more accessible website, then we should use **`rem`** instead of `px`. That’s why I have translated `px` to `rem` by using a utility function`pxToRem()`.  REM does not just apply to font size, but to all sizes as well. When the browser default font size is changed by the user, every size will change accordingly. 
+- **Folder Structure:** Created a folder structure that I found coherent to the activity. Further information about the folder structure at the end of the readme.
 
-### `npm start`
+### Things I would have done with more time: 
+- Unit tests.
+- Storybook for each new re-usable component: button, card, modal, snackers, table, CRUD management table, confirmation modal.
+- I would have added a loading state for asynchronous calls.
+- Documentation of the whole feature 
+- Table could have been improved by having pagination (virtual scrolling, infinite scrolling, etc). 
+
+### Instructions to run it locally
+- `npm install`
+- `npms start`
 
 Runs the app in the development mode.\
 Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
+### Building the app for deployment
+`npm run build`
 
 Builds the app for production to the `build` folder.\
 It correctly bundles React in production mode and optimizes the build for the best performance.
 
 The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Folder structure
+  - **UI folder:** Contains base stateless UI components (button, modal, etc). They are wrapped material UI components with some style adjustments and some new other components that allows composition without replicating code in the same project. It is good to have these UI components isolated since any change mainly from UX requirements can be made in a single place and be reflected in the whole app. And it can be isolated as a complete UI library with common components that could be used on any repository from the same company extending the effort (and same visual alignments) to other projects.
+  - **Layout folder:** They are not base UI components but they are still reusable UI components linked to the feature needs and they work as building blocks for more complex UIs.
+  - **Models Folder**: Classes that refers to the entities that are involved on the features.
+  - **Pages Folder**: In SPA we still have pages that matches to the url paths. Those usually are stateful components with business logic built by using the UI components.
+  - **Theme Folder**: All things related to theme styles, utilities regarding styles, etc can be placed here.
