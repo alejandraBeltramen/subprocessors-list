@@ -16,7 +16,7 @@ const pageContainerStyles = (theme) => ({
     },
 });
 
-export default function PageContainer({ children}) {
+export default function PageContainer({ children }) {
     return (
         <Container sx={pageContainerStyles}>
             { children }

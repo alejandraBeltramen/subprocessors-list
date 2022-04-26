@@ -48,7 +48,7 @@ export const ModalTitleText = ({ children, ...otherProps }) => {
             { children }
         </Typography>
     );
-}
+};
 
 const modalActionsStyles = {
     justifyContent: 'flex-end',

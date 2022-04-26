@@ -25,11 +25,7 @@ const ManageItemsTable = ({
     return (
         <Card>
             <ManagementHeading title={title}>
-                <Button
-                    onClick={onAddClick}
-                    variant="contained"
-                    size="small"
-                >
+                <Button onClick={onAddClick} variant="contained" size="small">
                     { addBtnLabel }
                 </Button>
             </ManagementHeading>

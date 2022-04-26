@@ -16,9 +16,13 @@ export const getSubprocessors = () => {
 
     return subprocessorsLS;
 };
-export const setSubprocessors = (subprocessorsList) => localStorage.setItem(SUBPROCESSORS_KEY_LS, JSON.stringify(subprocessorsList));
+export const setSubprocessors = (subprocessorsList) => (
+    localStorage.setItem(SUBPROCESSORS_KEY_LS, JSON.stringify(subprocessorsList))
+);
 export const removeSubprocessor = (subprocessor) => {
-    const newSubprocessorsList = getSubprocessors().filter((subprocessorItem) => subprocessorItem.id !== subprocessor.id);
+    const newSubprocessorsList = getSubprocessors().filter(
+        (subprocessorItem) => subprocessorItem.id !== subprocessor.id
+    );
     setSubprocessors(newSubprocessorsList);
     return newSubprocessorsList;
 };
